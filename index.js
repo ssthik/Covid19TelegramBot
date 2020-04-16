@@ -1,0 +1,307 @@
+require("dotenv").config();
+const fetch = require("request");
+
+const fetch1 = require("request");
+
+const TelegramBot = require("node-telegram-bot-api");
+
+// replace the value below with the Telegram token you receive from @BotFather
+const token = process.env.TELE_BOT;
+
+// Create a bot that uses 'polling' to fetch new updates
+const bot = new TelegramBot(token, { polling: true });
+
+function capital_letter(str) {
+  str = str.split(" ");
+
+  for (let i = 0, x = str.length; i < x; i++) {
+    str[i] = str[i][0].toUpperCase() + str[i].substr(1);
+  }
+
+  return str.join(" ");
+}
+
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(
+    msg.chat.id,
+    "<b>Welcome</b>\nThis is a bot created to give out information on the COVID19 pandemic for each country that have been affected by the virus.\nType in <a>/help</a> for more information.",
+    { parse_mode: "HTML" }
+  );
+});
+
+bot.onText(/\/help/, (msg) => {
+  bot.sendMessage(
+    msg.chat.id,
+    "<b>/help</b>\nEnter <b><i>/global</i></b> for information around the globe.\nEnter <b><i>/country</i></b> COUNTRYNAME to get all information. \nEnter <b><i>/infected</i></b> COUNTRYNAME to get number of infections. \nEnter <b><i>/deaths</i></b> COUNTRYNAME to get number of Deaths. \nEnter <b><i>/recovered</i></b> COUNTRYNAME to get number of people recovered. \nFor the United States please enter <b>USA</b>, for the United Kingdom please enter <b>UK</b>, for the Republic of Korea (South Korea) please enter <b>S. Korea</b>",
+    { parse_mode: "HTML" }
+  );
+
+  bot.sendPhoto(
+    msg.chat.id,
+    "https://drive.google.com/file/d/1QM1DhDynh6wN9JMyhBLO3fDjMrDuFnGL/view?usp=sharing"
+  );
+});
+
+bot.onText(/\/global/, (msg) => {
+  fetch(
+    "https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php",
+    {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+        "x-rapidapi-key": process.env.API_KEY,
+      },
+    },
+    (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        bot
+          .sendMessage(msg.chat.id, "Retreiving <b>Global</b> Stats", {
+            parse_mode: "HTML",
+          })
+          .then((msg) => {
+            let globe = JSON.parse(body);
+            bot.sendMessage(
+              msg.chat.id,
+              ` <i><b>Total Infected:</b></i> ${globe.total_cases} \n<i><b>Total Deaths:</b></i> ${globe.total_deaths} \n<i><b>Total Recovered:</b></i> ${globe.total_recovered} \n<b><i>New Cases:</i></b> ${globe.new_cases} \n<b><i>New Deaths:</i></b> ${globe.new_deaths} \n<b><i>Last Updated:</i></b> ${globe.statistic_taken_at}`,
+              { parse_mode: "HTML" }
+            );
+          });
+      }
+    }
+  );
+});
+
+bot.onText(/\/country (.+)/, (msg, match) => {
+  let countryName = match[1];
+  fetch1(
+    `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
+    {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+        "x-rapidapi-key": process.env.API_KEY,
+      },
+    },
+    (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        bot
+          .sendMessage(
+            msg.chat.id,
+            `Retreiving Information for <i><b>${capital_letter(
+              countryName.toLowerCase()
+            )}</b></i>`,
+            { parse_mode: "HTML" }
+          )
+          .then((msg) => {
+            let countries = JSON.parse(body);
+            let {
+              country,
+              latest_stat_by_country: [
+                {
+                  total_cases,
+                  new_cases,
+                  active_cases,
+                  total_deaths,
+                  new_deaths,
+                  total_recovered,
+                  serious_critical,
+                  total_cases_per1m,
+                  record_date,
+                },
+              ],
+            } = countries;
+            bot.sendMessage(
+              msg.chat.id,
+              `<b><i>Total Cases:</i></b> ${total_cases} \n<b><i>New Cases:</i></b> ${new_cases} \n<b><i>Total Deaths:</i></b> ${total_deaths} \n<b><i>New Deaths:</i></b> ${new_deaths} \n<b><i>Total Recovered:</i></b> ${total_recovered} \n<b><i>Active Cases:</i></b> ${active_cases} \n<b><i>Critical Cases:</i></b> ${serious_critical} \n<b><i>Total Cases per Million:</i></b> ${total_cases_per1m} \n<b><i>Last Updated</i></b> ${record_date}`,
+              { parse_mode: "HTML" }
+            ); //close send message
+          }); //close function and then
+      } //close if
+    } //close parent function
+  ); //close fetch
+}); //close grandparent function and ontext
+
+bot.onText(/\/infected (.+)/, (msg, match) => {
+  let countryName = match[1];
+  fetch1(
+    `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
+    {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+        "x-rapidapi-key": process.env.API_KEY,
+      },
+    },
+    (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        bot
+          .sendMessage(
+            msg.chat.id,
+            `Retreiving Number of infected for <i><b>${capital_letter(
+              countryName.toLowerCase()
+            )}</b></i>`,
+            { parse_mode: "HTML" }
+          )
+          .then((msg) => {
+            let countries = JSON.parse(body);
+            let {
+              country,
+              latest_stat_by_country: [
+                {
+                  total_cases,
+                  new_cases,
+                  active_cases,
+                  serious_critical,
+                  total_cases_per1m,
+                  record_date,
+                },
+              ],
+            } = countries;
+            bot.sendMessage(
+              msg.chat.id,
+              `<b><i>Total Cases:</i></b> ${total_cases} \n<b><i>New Cases:</i></b> ${new_cases} \n<b><i>Active Cases:</i></b> ${active_cases} \n<b><i>Critical Cases:</i></b> ${serious_critical} \n<b><i>Total Cases per Million:</i></b> ${total_cases_per1m} \n<b><i>Last Updated</i></b> ${record_date}`,
+              { parse_mode: "HTML" }
+            ); //close send message
+          }); //close function and then
+      } //close if
+    } //close parent function
+  ); //close fetch
+}); //close grandparent function and ontext
+
+bot.onText(/\/recovered (.+)/, (msg, match) => {
+  let countryName = match[1];
+  fetch1(
+    `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
+    {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+        "x-rapidapi-key": process.env.API_KEY,
+      },
+    },
+    (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        bot
+          .sendMessage(
+            msg.chat.id,
+            `Retreiving number of recovered for <i><b>${capital_letter(
+              countryName.toLowerCase()
+            )}</b></i>`,
+            { parse_mode: "HTML" }
+          )
+          .then((msg) => {
+            let countries = JSON.parse(body);
+            let {
+              country,
+              latest_stat_by_country: [{ total_recovered, record_date }],
+            } = countries;
+            bot.sendMessage(
+              msg.chat.id,
+              `<b><i>Total Recovered:</i></b> ${total_recovered} \n<b><i>Last Updated</i></b> ${record_date}`,
+              { parse_mode: "HTML" }
+            ); //close send message
+          }); //close function and then
+      } //close if
+    } //close parent function
+  ); //close fetch
+}); //close grandparent function and ontext
+
+bot.onText(/\/deaths (.+)/, (msg, match) => {
+  let countryName = match[1];
+  fetch1(
+    `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
+    {
+      method: "GET",
+      headers: {
+        "x-rapidapi-host": "coronavirus-monitor.p.rapidapi.com",
+        "x-rapidapi-key": process.env.API_KEY,
+      },
+    },
+    (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        bot
+          .sendMessage(
+            msg.chat.id,
+            `Retreiving number of deaths for <i><b>${capital_letter(
+              countryName.toLowerCase()
+            )}</b></i>`,
+            { parse_mode: "HTML" }
+          )
+          .then((msg) => {
+            let countries = JSON.parse(body);
+            let {
+              country,
+              latest_stat_by_country: [
+                { total_deaths, new_deaths, record_date },
+              ],
+            } = countries;
+            bot.sendMessage(
+              msg.chat.id,
+              `\n<b><i>Total Deaths:</i></b> ${total_deaths} \n<b><i>New Deaths:</i></b> ${new_deaths} \n<b><i>Last Updated</i></b> ${record_date}`,
+              { parse_mode: "HTML" }
+            ); //close send message
+          }); //close function and then
+      } //close if
+    } //close parent function
+  ); //close fetch
+}); //close grandparent function and ontext
+
+bot.on("message", (msg) => {
+  if (msg.text.toString().toLowerCase() === "/country") {
+    bot.sendMessage(
+      msg.chat.id,
+      `Please enter the country name after you entered /country. <i>example:</i> /country italy`,
+      { parse_mode: "HTML" }
+    );
+  }
+});
+
+bot.on("message", (msg) => {
+  if (msg.text.toString().toLowerCase() === "/infected") {
+    bot.sendMessage(
+      msg.chat.id,
+      `Please enter the country name after you entered /infected. <i>example:</i> /infected usa`,
+      { parse_mode: "HTML" }
+    );
+  }
+});
+
+bot.on("message", (msg) => {
+  if (msg.text.toString().toLowerCase() === "/deaths") {
+    bot.sendMessage(
+      msg.chat.id,
+      `Please enter the country name after you entered /deaths. <i>example:</i> /deaths china`,
+      { parse_mode: "HTML" }
+    );
+  }
+});
+
+bot.on("message", (msg) => {
+  if (msg.text.toString().toLowerCase() === "/recovered") {
+    bot.sendMessage(
+      msg.chat.id,
+      `Please enter the country name after you entered /recovered. <i>example:</i> /recovered cambodia`,
+      { parse_mode: "HTML" }
+    );
+  }
+});
+
+bot.on("message", (msg) => {
+  console.log(msg);
+  if (
+    msg.text.toString().toLowerCase() !== "/global" &&
+    msg.text.toString().toLowerCase() !== "/start" &&
+    msg.text.toString().toLowerCase() !== "/help" &&
+    msg.text.toString().toLowerCase().indexOf("/country") &&
+    msg.text.toString().toLowerCase().indexOf("/infected") &&
+    msg.text.toString().toLowerCase().indexOf("/deaths") &&
+    msg.text.toString().toLowerCase().indexOf("/recovered")
+  ) {
+    bot.sendMessage(
+      msg.chat.id,
+      `Invalid Country or Invalid option. Please /help to see what to do.`
+    );
+  }
+});
+
+bot.on("polling_error", (err) => console.log(err));

@@ -11,6 +11,12 @@ const token = process.env.TELE_BOT;
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
 
+//tricking heroku
+const express = require("express");
+
+const app = express();
+const port = process.env.PORT || 3000;
+
 function capital_letter(str) {
   str = str.split(" ");
 
@@ -305,3 +311,11 @@ bot.on("message", (msg) => {
 });
 
 bot.on("polling_error", (err) => console.log(err));
+
+
+// viewed at http://localhost:3000
+app.get("/", function (req, res) {
+  res.send("telegramBot is now starting");
+});
+
+app.listen(port, () => console.log(`telegramBot start on port ${port}!`));

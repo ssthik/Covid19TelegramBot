@@ -38,7 +38,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/help/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    "<b>/help</b>\nEnter <b><i>/global</i></b> for information around the globe.\nEnter <b><i>/country</i></b> COUNTRYNAME to get all information. \nEnter <b><i>/infected</i></b> COUNTRYNAME to get number of infections. \nEnter <b><i>/deaths</i></b> COUNTRYNAME to get number of Deaths. \nEnter <b><i>/recovered</i></b> COUNTRYNAME to get number of people recovered. \nFor the United States please enter <b>USA</b>, for the United Kingdom please enter <b>UK</b>, for the Republic of Korea (South Korea) please enter <b>S. Korea</b>",
+    "<b>/help</b>\nSee the picture attached for a general idea of how to navigate within the bot.\nEnter <b><i>/global</i></b> for information around the globe.\nEnter <b><i>/country</i></b> COUNTRYNAME to get all information. \nEnter <b><i>/infected</i></b> COUNTRYNAME to get number of infections. \nEnter <b><i>/deaths</i></b> COUNTRYNAME to get number of Deaths. \nEnter <b><i>/recovered</i></b> COUNTRYNAME to get number of people recovered. \nFor the United States please enter <b>USA</b>, for the United Kingdom please enter <b>UK</b>, for the Republic of Korea (South Korea) please enter <b>S. Korea</b>",
     { parse_mode: "HTML" }
   );
 

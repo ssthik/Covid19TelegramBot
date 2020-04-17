@@ -30,7 +30,7 @@ function capital_letter(str) {
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    "<b>Welcome</b>\nThis is a bot created to give out information on the COVID19 pandemic for each country that have been affected by the virus.\nType in <a>/help</a> for more information.",
+    "<b>Welcome</b>\nThis is a bot created to give out up-to-date information on the COVID19 pandemic for countries that have been affected by the virus.\nType in <a>/help</a> for more information.",
     { parse_mode: "HTML" }
   );
 });

@@ -121,11 +121,13 @@ bot.onText(/\/country (.+)/, (msg, match) => {
               `<b><i>Total Cases:</i></b> ${total_cases} \n<b><i>New Cases:</i></b> ${new_cases} \n<b><i>Total Deaths:</i></b> ${total_deaths} \n<b><i>New Deaths:</i></b> ${new_deaths} \n<b><i>Total Recovered:</i></b> ${total_recovered} \n<b><i>Active Cases:</i></b> ${active_cases} \n<b><i>Critical Cases:</i></b> ${serious_critical} \n<b><i>Total Cases per Million:</i></b> ${total_cases_per1m} \n<b><i>Last Updated</i></b> ${record_date}`,
               { parse_mode: "HTML" }
             ); //close send message
-          }); //close function and then
+          }
+        ); //close function and then
       } //close if
     } //close parent function
   ); //close fetch
-}); //close grandparent function and ontext
+ }
+); //close grandparent function and ontext
 
 bot.onText(/\/infected (.+)/, (msg, match) => {
   let countryName = match[1];

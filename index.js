@@ -17,6 +17,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
+//function to convert the first letter of Country names to capital letter
 function capital_letter(str) {
   str = str.split(" ");
 
@@ -27,6 +28,7 @@ function capital_letter(str) {
   return str.join(" ");
 }
 
+//text sent once /start is called
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
@@ -35,6 +37,7 @@ bot.onText(/\/start/, (msg) => {
   );
 });
 
+//text sent once /help is called
 bot.onText(/\/help/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
@@ -48,6 +51,7 @@ bot.onText(/\/help/, (msg) => {
   );
 });
 
+//text sent once /extra is called
 bot.onText(/\/extra/, (msg) => {
   bot.sendMessage(
     msg.chat.id,
@@ -56,8 +60,9 @@ bot.onText(/\/extra/, (msg) => {
   );
 });
 
+//retrieve global data once /global is called
 bot.onText(/\/global/, (msg) => {
-  fetch(
+  fetch( //fecting data from api
     "https://coronavirus-monitor.p.rapidapi.com/coronavirus/worldstat.php",
     {
       method: "GET",
@@ -85,6 +90,7 @@ bot.onText(/\/global/, (msg) => {
   );
 });
 
+//retrieving data for a particular country 
 bot.onText(/\/country (.+)/, (msg, match) => {
   let countryName = match[1];
   fetch1(
@@ -137,6 +143,7 @@ bot.onText(/\/country (.+)/, (msg, match) => {
  }
 ); //close grandparent function and ontext
 
+//retrieving data of infected for a particular country 
 bot.onText(/\/infected (.+)/, (msg, match) => {
   let countryName = match[1];
   fetch1(
@@ -184,6 +191,7 @@ bot.onText(/\/infected (.+)/, (msg, match) => {
   ); //close fetch
 }); //close grandparent function and ontext
 
+//retrieving data of recovered for a particular country 
 bot.onText(/\/recovered (.+)/, (msg, match) => {
   let countryName = match[1];
   fetch1(
@@ -222,6 +230,7 @@ bot.onText(/\/recovered (.+)/, (msg, match) => {
   ); //close fetch
 }); //close grandparent function and ontext
 
+//retrieving data of deaths for a particular country 
 bot.onText(/\/deaths (.+)/, (msg, match) => {
   let countryName = match[1];
   fetch1(
@@ -262,6 +271,7 @@ bot.onText(/\/deaths (.+)/, (msg, match) => {
   ); //close fetch
 }); //close grandparent function and ontext
 
+//response if only /country was entered
 bot.on("message", (msg) => {
   if (msg.text.toString().toLowerCase() === "/country") {
     bot.sendMessage(
@@ -272,6 +282,7 @@ bot.on("message", (msg) => {
   }
 });
 
+//response if only /infected was entered
 bot.on("message", (msg) => {
   if (msg.text.toString().toLowerCase() === "/infected") {
     bot.sendMessage(
@@ -282,6 +293,7 @@ bot.on("message", (msg) => {
   }
 });
 
+//response if only /cdeaths was entered
 bot.on("message", (msg) => {
   if (msg.text.toString().toLowerCase() === "/deaths") {
     bot.sendMessage(
@@ -292,6 +304,7 @@ bot.on("message", (msg) => {
   }
 });
 
+//response if only /recovered was entered
 bot.on("message", (msg) => {
   if (msg.text.toString().toLowerCase() === "/recovered") {
     bot.sendMessage(
@@ -302,6 +315,7 @@ bot.on("message", (msg) => {
   }
 });
 
+//error message if any entries are different from the calls 
 bot.on("message", (msg) => {
   console.log(msg);
   if (

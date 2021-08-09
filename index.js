@@ -311,7 +311,8 @@ bot.on("message", (msg) => {
     msg.text.toString().toLowerCase().indexOf("/country") &&
     msg.text.toString().toLowerCase().indexOf("/infected") &&
     msg.text.toString().toLowerCase().indexOf("/deaths") &&
-    msg.text.toString().toLowerCase().indexOf("/recovered")
+    msg.text.toString().toLowerCase().indexOf("/recovered") &&
+    msg.text.toString().toLowerCase() !== "/extra"
   ) {
     bot.sendMessage(
       msg.chat.id,

@@ -1,8 +1,6 @@
 require("dotenv").config();
 const fetch = require("request");
 
-const fetch1 = require("request");
-
 const TelegramBot = require("node-telegram-bot-api");
 
 // replace the value below with the Telegram token you receive from @BotFather
@@ -93,7 +91,7 @@ bot.onText(/\/global/, (msg) => {
 //retrieving data for a particular country 
 bot.onText(/\/country (.+)/, (msg, match) => {
   let countryName = match[1];
-  fetch1(
+  fetch(
     `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
     {
       method: "GET",
@@ -146,7 +144,7 @@ bot.onText(/\/country (.+)/, (msg, match) => {
 //retrieving data of infected for a particular country 
 bot.onText(/\/infected (.+)/, (msg, match) => {
   let countryName = match[1];
-  fetch1(
+  fetch(
     `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
     {
       method: "GET",
@@ -194,7 +192,7 @@ bot.onText(/\/infected (.+)/, (msg, match) => {
 //retrieving data of recovered for a particular country 
 bot.onText(/\/recovered (.+)/, (msg, match) => {
   let countryName = match[1];
-  fetch1(
+  fetch(
     `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
     {
       method: "GET",
@@ -233,7 +231,7 @@ bot.onText(/\/recovered (.+)/, (msg, match) => {
 //retrieving data of deaths for a particular country 
 bot.onText(/\/deaths (.+)/, (msg, match) => {
   let countryName = match[1];
-  fetch1(
+  fetch(
     `https://coronavirus-monitor.p.rapidapi.com/coronavirus/latest_stat_by_country.php?country=${countryName.toLowerCase()}`,
     {
       method: "GET",
